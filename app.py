@@ -40,7 +40,7 @@ def load_css():
 
 # Streamlit app UI
 def main():
-    st.title("Llama-3.2-1B Chatbot")
+    st.title("Mia Chat Help")
 
     # Load the CSS file
     load_css()
@@ -66,7 +66,7 @@ def main():
         # Generate and display model response
         with st.spinner("Llama-3.2-1B is typing..."):
             response = generate_response(model, tokenizer, user_input, device)
-            st.session_state["messages"].append(f"**Llama-3.2-1B**: {response}")
+            st.session_state["messages"].append(f"**Mia thinking**: {response}")
             st.write(f"**Llama-3.2-1B**: {response}")
     
     # Display chat history from session state
