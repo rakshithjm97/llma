@@ -1,0 +1,21 @@
+body {
+    background-image: url("https://raw.githubusercontent.com/rakshithjm97/iq/main/pexels-lilartsy-1925536.jpg"), 
+                      url("https://raw.githubusercontent.com/rakshithjm97/iq/main/pexels-rickyrecap-1926988.jpg");
+    background-size: cover, cover;
+    background-repeat: no-repeat, no-repeat;
+    background-position: center center, center center;
+    height: 100%;
+    margin: 0;
+}
+
+.stTextInput > div > div > input {
+    background-color: #F5F5F5;
+    border-radius: 5px;
+}
+
+.stButton button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 5px;
+}
