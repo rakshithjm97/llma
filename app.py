@@ -50,6 +50,11 @@ def load_css():
 def main():
     st.title("Mia Chat Help")
 
+    # Clear cache button
+    if st.button("Clear Cache"):
+        st.cache_data.clear()  # Clears Streamlit cache in newer versions
+        st.success("Cache cleared!")
+
     # Load the CSS file
     load_css()
 
