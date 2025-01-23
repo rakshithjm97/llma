@@ -4,7 +4,7 @@ import torch
 import os
 
 # Hugging Face access token from environment
-token = os.getenv("HF_ACCESS_TOKEN")
+token = st.secrets["hf"]["token"]
 
 # Load model and tokenizer from Hugging Face and use GPU if available
 @st.cache_resource()
