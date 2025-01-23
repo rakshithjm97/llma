@@ -1,21 +1,26 @@
 import streamlit as st
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
+import os
 
-# Hugging Face access token
-token = "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"
+# Hugging Face access token from environment
+token = os.getenv("HF_ACCESS_TOKEN")
 
 # Load model and tokenizer from Hugging Face and use GPU if available
 @st.cache_resource()
 def load_model():
-    model_name = "meta-llama/Llama-3.2-1B"  # Llama model from Hugging Face
-    tokenizer = AutoTokenizer.from_pretrained(model_name, use_auth_token=token)
-    
-    # Use GPU if available for faster inference
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
-    model = AutoModelForCausalLM.from_pretrained(model_name, use_auth_token=token).to(device)
-    return model, tokenizer, device
+    try:
+        model_name = "meta-llama/Llama-3.2-1B"  # Llama model from Hugging Face
+        tokenizer = AutoTokenizer.from_pretrained(model_name, token=token)
+        
+        # Use GPU if available for faster inference
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        
+        model = AutoModelForCausalLM.from_pretrained(model_name, token=token).to(device)
+        return model, tokenizer, device
+    except Exception as e:
+        st.error(f"Error loading the model: {str(e)}")
+        return None, None, None
 
 # Generate chat response using the model with optimized sampling parameters
 def generate_response(model, tokenizer, prompt, device):
@@ -35,8 +40,11 @@ def generate_response(model, tokenizer, prompt, device):
 
 # Load the external CSS file
 def load_css():
-    with open("styles.css") as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    try:
+        with open("styles.css") as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.warning("CSS file not found. Ensure the file path is correct.")
 
 # Streamlit app UI
 def main():
@@ -52,6 +60,10 @@ def main():
     # Load the model, tokenizer, and device (CPU/GPU)
     model, tokenizer, device = load_model()
 
+    if not model or not tokenizer:
+        st.error("Failed to load the model.")
+        return
+
     # Create a form for user input
     with st.form("chat_form"):
         user_input = st.text_input("You:", "")
@@ -66,7 +78,7 @@ def main():
         # Generate and display model response
         with st.spinner("Llama-3.2-1B is typing..."):
             response = generate_response(model, tokenizer, user_input, device)
-            st.session_state["messages"].append(f"**Mia thinking**: {response}")
+            st.session_state["messages"].append(f"**Llama-3.2-1B**: {response}")
             st.write(f"**Llama-3.2-1B**: {response}")
     
     # Display chat history from session state
